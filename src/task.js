@@ -58,7 +58,8 @@ const callModal = (event) => {
 
 refs.ulGallery.addEventListener("click", callModal);
 
-const closeModal = (event) => {
+const closeModal = () => {
+  refs.imgLightbox.removeAttribute("src");
   refs.divLightbox.classList.remove("is-open");
 };
 
