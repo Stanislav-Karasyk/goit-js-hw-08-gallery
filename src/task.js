@@ -7,7 +7,9 @@ const refs = {
   btnCloseModal: document.querySelector("[data-action=close-lightbox]"),
 };
 
-galleryArr.forEach(({ preview, original, description }, arrIndex) => {
+let indexCurentImg = 0;
+
+galleryArr.forEach(({ preview, original, description }, galleryIndex) => {
   const template = `<li class="gallery__item">
     <a
       class="gallery__link"
@@ -17,14 +19,13 @@ galleryArr.forEach(({ preview, original, description }, arrIndex) => {
         class="gallery__image"
         src="${preview}"
         data-source="${original}"
-        data-index="${arrIndex}"
+        data-index="${galleryIndex}"
         alt="${description}"
       />
     </a>
   </li>`;
   refs.ulGallery.insertAdjacentHTML("afterbegin", template);
 });
-
 
 const showBigImg = (event) => {
   event.preventDefault();
@@ -40,8 +41,6 @@ const showBigImg = (event) => {
 
 function setBigImgSrc(url) {
   refs.imgLightbox.src = url;
-
-  console.log(imgGalleryRef);
 }
 
 refs.ulGallery.addEventListener("click", showBigImg);
@@ -53,30 +52,28 @@ const callModal = (event) => {
     return;
   }
   refs.divLightbox.classList.add("is-open");
+
+  indexCurentImg = event.target.dataset.index;
 };
 
 refs.ulGallery.addEventListener("click", callModal);
 
-const closeModal = () => {
+const closeModal = (event) => {
   refs.divLightbox.classList.remove("is-open");
 };
 
 refs.btnCloseModal.addEventListener("click", closeModal);
 
-// =================================================
-
-const imgGalleryRef = document.querySelector(".gallery__image");
-// console.log(imgGalleryRef);
-
 const scrolLeftRight = (event) => {
-  if (event.keyCode == "37") {
-    console.log("LEFT");
-    
+  if (event.code === "ArrowLeft" && indexCurentImg > 0) {
+    indexCurentImg = Number(indexCurentImg) - 1;
+    refs.imgLightbox.src = galleryArr[indexCurentImg].original;
   }
-  if (event.keyCode == "39") {
-    console.log("RIGHT");
+
+  if (event.code === "ArrowRight" && indexCurentImg < galleryArr.length - 1) {
+    indexCurentImg = Number(indexCurentImg) + 1;
+    refs.imgLightbox.src = galleryArr[indexCurentImg].original;
   }
 };
 
 refs.ulGallery.addEventListener("keydown", scrolLeftRight);
-
